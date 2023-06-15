@@ -26,16 +26,18 @@ window.resizable(width=False, height=False)
 
 style = ttk.Style(window)
 style.theme_use("clam")
-style.configure("Frame1.TFrame", background=cor11)
+style.configure("Frame1.TFrame", background=cor9)
+style.configure("Frame2.TFrame", background=cor10)
+style.configure("Frame3.TFrame", background=cor11)
 
 # ----------------- CRIAÇÃO DOS FRAMES ---------------- #
 frameNav = ttk.Frame(window, width=1043, height=80, style="Frame1.TFrame")
 frameNav.grid(row=0, column=0)
 
-frameSection = ttk.Frame(window, width=1043, height=305, style="Frame1.TFrame")
+frameSection = ttk.Frame(window, width=1043, height=305, style="Frame2.TFrame")
 frameSection.grid(row=1, column=0, pady=0)
 
-frameFotter = ttk.Frame(window, width=1043, height=305, style="Frame1.TFrame")
+frameFotter = ttk.Frame(window, width=1043, height=305, style="Frame3.TFrame")
 frameFotter.grid(row=2, column=0, pady=0, sticky="nsew")
 
 # abrindo img
@@ -90,22 +92,13 @@ l_numSerie.place(x=10, y=195)
 e_numSerie = tk.Entry(frameSection, width=30, justify="left", relief="solid")
 e_numSerie.place(x=130, y=196)
 
-# adicionar imagem
-l_btnImagem = tk.Label(frameSection, text='Imagem do item', height=1, anchor="nw", font=("Ivy 10 bold"), bg=cor11, fg=cor12)
-l_btnImagem.place(x=10, y=225)
-
-# criando os botões
-
-# botão carregar
-b_btnImagem = tk.Button(frameSection, text="Carregar".upper(),compound="center",anchor="center",overrelief="ridge",width=29,font=("Ivy 8"),justify='left')
-b_btnImagem.place(x=130, y=226)
+# ----------------- criando os botões ---------------#
 
 # botão inserir
-l_btnImagem = tk.Label(frameSection, text='Imagem do item', height=1, anchor="nw", font=("Ivy 10 bold"), bg=cor11, 
-fg=cor12)
-l_btnImagem.place(x=10, y=225)
+l_rotuloImagem = tk.Label(frameSection, text='Imagem do item', height=1, anchor="nw", font=("Ivy 10 bold"), bg=cor11, fg=cor12)
+l_rotuloImagem.place(x=10, y=225)
 
-b_btnImagem = tk.Button(frameSection, text="Carregar".upper(),compound="center",anchor="center",overrelief="ridge",width=29,font=("Ivy 8"),justify='left')
+b_btnImagem = tk.Button(frameSection,text="Carregar".upper(),compound="center",anchor="center",overrelief="ridge",width=29,font=("Ivy 8"),justify='left')
 b_btnImagem.place(x=130, y=226)
 
 add_img = Image.open('img/plus.png')
@@ -116,12 +109,6 @@ b_inserir = tk.Button(frameSection,image=add_img, text="  adicionar".upper(),wid
 b_inserir.place(x=330, y=10)
 
 # botão deletar
-l_btnImagem = tk.Label(frameSection, text='Imagem do item', height=1, anchor="nw", font=("Ivy 10 bold"), bg=cor11, 
-fg=cor12)
-l_btnImagem.place(x=10, y=225)
-
-b_btnImagem = tk.Button(frameSection, text="Carregar".upper(),compound="center",anchor="center",overrelief="ridge",width=29,font=("Ivy 8"),justify='left')
-b_btnImagem.place(x=130, y=226)
 
 remove_img = Image.open('img/remove.png')
 remove_img = remove_img.resize((20, 20))
@@ -131,12 +118,6 @@ b_inserir = tk.Button(frameSection,image=remove_img, text="  deletar".upper(),wi
 b_inserir.place(x=330, y=45)
 
 # botão de atualizar 
-l_btnImagem = tk.Label(frameSection, text='Imagem do item', height=1, anchor="nw", font=("Ivy 10 bold"), bg=cor11, 
-fg=cor12)
-l_btnImagem.place(x=10, y=225)
-
-b_btnImagem = tk.Button(frameSection, text="Carregar".upper(),compound="center",anchor="center",overrelief="ridge",width=29,font=("Ivy 8"),justify='left')
-b_btnImagem.place(x=130, y=226)
 
 atualizar_img = Image.open('img/refresh.png')
 atualizar_img = atualizar_img.resize((20, 20))
@@ -146,12 +127,6 @@ b_inserir = tk.Button(frameSection,image=atualizar_img, text="  Atualizar".upper
 b_inserir.place(x=330, y=80)
 
 # botão de visualizar imagem 
-l_btnImagem = tk.Label(frameSection, text='Imagem do item', height=1, anchor="nw", font=("Ivy 10 bold"), bg=cor11, 
-fg=cor12)
-l_btnImagem.place(x=10, y=225)
-
-b_btnImagem = tk.Button(frameSection, text="Carregar".upper(),compound="center",anchor="center",overrelief="ridge",width=29,font=("Ivy 8"),justify='left')
-b_btnImagem.place(x=130, y=226)
 
 view_img = Image.open('img/image.png')
 view_img = view_img.resize((20, 20))
