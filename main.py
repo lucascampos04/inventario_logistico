@@ -1,8 +1,136 @@
 import tkinter as tk
-from tkinter import ttk
+from tkinter import StringVar,ttk
 from PIL import Image, ImageTk
 from tkcalendar import Calendar, DateEntry
 from datetime import date
+from tkinter import filedialog as fg
+from tkinter import messagebox
+# Importandi o banco de dados
+from view import *
+
+
+# funções
+global tree
+
+def inserir():
+    global imagem, imagem_string, l_imagem
+
+    nome = e_nome.get()
+    local = e_area.get()
+    descricao = e_desc.get()
+    modelo = e_marca.get()
+    data = e_calendario.get()
+    valor = e_valorCompra.get()
+    serie = e_numSerie.get()
+    
+    lista_inserir = [nome, local, descricao, modelo, data, valor, serie]
+
+    for i in lista_inserir:
+        if i == "":
+            messagebox.showerror("Erro", "Preencha todos os campos")
+            return
+        
+    inserir_form(lista_inserir)
+
+    messagebox.showinfo("Sucesso", "Os dados foram inseridos com sucesso.")
+
+    e_nome.delete(0, 'end')
+    e_area.delete(0, 'end')
+    e_desc.delete(0, 'end')
+    e_marca.delete(0, 'end')
+    e_calendario.delete(0, 'end')
+    e_valorCompra.delete(0, 'end')
+    e_numSerie.delete(0, 'end')
+
+    mostrar()
+
+def atualizar():
+    try:
+        treev_dados = tree.focus()
+        treev_dicionario = tree.item(treev_dados)
+        treev_lista = treev_dicionario['values']
+
+        valor = [int(treev_lista[0])]
+
+        e_nome.delete(0, 'end')
+        e_area.delete(0, 'end')
+        e_desc.delete(0, 'end')
+        e_marca.delete(0, 'end')
+        e_calendario.delete(0, 'end')
+        e_valorCompra.delete(0, 'end')
+        e_numSerie.delete(0, 'end')
+
+        id = int(treev_lista[0])
+        e_nome.insert(0, treev_lista[1])
+        e_area.insert(0, treev_lista[2])
+        e_desc.insert(0, treev_lista[3])
+        e_marca.insert(0, treev_lista[4])
+        e_calendario.insert(0, treev_lista[5])
+        e_valorCompra.insert(0, treev_lista[6])
+        e_numSerie.insert(0, treev_lista[7])
+
+        imagem = ""
+        def update():
+            global imagem, imagem_string, l_imagem
+            nome = e_nome.get()
+            local = e_area.get()
+            descricao = e_desc.get()
+            modelo = e_marca.get()
+            data = e_calendario.get()
+            valor = e_valorCompra.get()
+            serie = e_numSerie.get()
+
+            imagem = e_numSerie.insert(0, treev_lista[7])
+
+            if imagem == "":
+                messagebox.showerror('Error', 'Preencha o campo de imagem')
+                return
+
+            lista_atualizar = [nome, local, descricao, modelo, data, valor, serie, id]
+
+            for i in lista_atualizar:
+                if i == '':
+                    messagebox.showerror('Error', 'Preencha todos os campos')
+                    return
+
+            atualizar_dados(lista_atualizar)
+            messagebox.showinfo('Sucesso', 'Os dados foram atualizados com sucesso')
+
+            e_nome.delete(0, 'end')
+            e_area.delete(0, 'end')
+            e_desc.delete(0, 'end')
+            e_marca.delete(0, 'end')
+            e_calendario.delete(0, 'end')
+            e_valorCompra.delete(0, 'end')
+            e_numSerie.delete(0, 'end')
+
+        b_confirmar = tk.Button(frameSection, command=update, text="Confirmar".upper(), width=15, overrelief="ridge", font=("Ivy 8"))
+        b_confirmar.place(x=330, y=130)
+
+
+
+
+    except IndexError:
+        messagebox.showerror("Erro", 'Seleciona os dados na tabela')
+    
+
+def deletar():
+    try:
+        treev_dados = tree.focus()
+        treev_dicionario = tree.item(treev_dados)
+        treev_lista = treev_dicionario['values'] 
+        valor = treev_lista[0]
+        
+
+        deletar_form([valor])
+        
+        messagebox.showinfo('Sucesso', 'Os dados foram atualizados com sucesso')
+
+        mostrar()
+    
+    except IndexError:
+        messagebox.showerror("Erro", 'Seleciona os dados na tabela')
+
 
 # ---------- cores ----------- #
 cor1 = "#FF0000"  # Vermelho
@@ -26,18 +154,16 @@ window.resizable(width=False, height=False)
 
 style = ttk.Style(window)
 style.theme_use("clam")
-style.configure("Frame1.TFrame", background=cor9)
-style.configure("Frame2.TFrame", background=cor10)
-style.configure("Frame3.TFrame", background=cor11)
+style.configure("Frame1.TFrame", background=cor11)
 
 # ----------------- CRIAÇÃO DOS FRAMES ---------------- #
 frameNav = ttk.Frame(window, width=1043, height=80, style="Frame1.TFrame")
 frameNav.grid(row=0, column=0)
 
-frameSection = ttk.Frame(window, width=1043, height=305, style="Frame2.TFrame")
+frameSection = ttk.Frame(window, width=1043, height=305, style="Frame1.TFrame")
 frameSection.grid(row=1, column=0, pady=0)
 
-frameFotter = ttk.Frame(window, width=1043, height=305, style="Frame3.TFrame")
+frameFotter = ttk.Frame(window, width=1043, height=305, style="Frame1.TFrame")
 frameFotter.grid(row=2, column=0, pady=0, sticky="nsew")
 
 # abrindo img
@@ -95,105 +221,88 @@ e_numSerie.place(x=130, y=196)
 # ----------------- criando os botões ---------------#
 
 # botão inserir
-l_rotuloImagem = tk.Label(frameSection, text='Imagem do item', height=1, anchor="nw", font=("Ivy 10 bold"), bg=cor11, fg=cor12)
-l_rotuloImagem.place(x=10, y=225)
-
-b_btnImagem = tk.Button(frameSection,text="Carregar".upper(),compound="center",anchor="center",overrelief="ridge",width=29,font=("Ivy 8"),justify='left')
-b_btnImagem.place(x=130, y=226)
-
 add_img = Image.open('img/plus.png')
 add_img = add_img.resize((20, 20))
 add_img = ImageTk.PhotoImage(add_img)
 
-b_inserir = tk.Button(frameSection,image=add_img, text="  adicionar".upper(),width=95,compound="left",overrelief="ridge", anchor='nw',font=("Ivy 8"),justify='left')
-b_inserir.place(x=330, y=10)
+b_inserir = tk.Button(frameSection,image=add_img,command=inserir,text="         adicionar".upper(),width=155,compound="left",overrelief="ridge", anchor='nw',font=("Ivy 8"),justify='left')
+b_inserir.place(x=130, y=226)
 
 # botão deletar
-
 remove_img = Image.open('img/remove.png')
 remove_img = remove_img.resize((20, 20))
 remove_img = ImageTk.PhotoImage(remove_img)
 
-b_inserir = tk.Button(frameSection,image=remove_img, text="  deletar".upper(),width=95,compound="left",overrelief="ridge", anchor='nw',font=("Ivy 8"),justify='left')
-b_inserir.place(x=330, y=45)
+b_inserir = tk.Button(frameSection,image=remove_img, text="  deletar".upper(),command=deletar,width=95,compound="left",overrelief="ridge", anchor='nw',font=("Ivy 8"),justify='left')
+b_inserir.place(x=330, y=226)
 
 # botão de atualizar 
-
 atualizar_img = Image.open('img/refresh.png')
 atualizar_img = atualizar_img.resize((20, 20))
 atualizar_img = ImageTk.PhotoImage(atualizar_img)
 
-b_inserir = tk.Button(frameSection,image=atualizar_img, text="  Atualizar".upper(),width=95,compound="left",overrelief="ridge", anchor='nw',font=("Ivy 8"),justify='left')
-b_inserir.place(x=330, y=80)
-
-# botão de visualizar imagem 
-
-view_img = Image.open('img/image.png')
-view_img = view_img.resize((20, 20))
-view_img = ImageTk.PhotoImage(view_img)
-
-b_inserir = tk.Button(frameSection,image=view_img, text="  ver imagem".upper(),width=95,compound="left",overrelief="ridge", anchor='nw',font=("Ivy 8"),justify='left')
-b_inserir.place(x=330, y=226)
-
+b_inserir = tk.Button(frameSection,image=atualizar_img, text="  Atualizar".upper(),width=95,compound="left",command=atualizar,overrelief="ridge", anchor='nw',font=("Ivy 8"),justify='left')
+b_inserir.place(x=330, y=180)
 
 # labels - quantidade total e valores
+l_total = tk.Label(frameSection, text='',width=17, height=4, anchor="center", font=("Ivy 17 bold"), bg=cor12, fg=cor10)
+l_total.place(x=455, y=20)
+l_total_ = tk.Label(frameSection, text='Valor total de todos os itens'.upper(), height=2, anchor="center", font=("Ivy 10 bold"), bg=cor12, fg=cor11)
+l_total_.place(x=455, y=22)
 
-l_total = tk.Label(frameSection, text='',width=17, height=3, anchor="center", font=("Ivy 17 bold"), bg=cor3, fg=cor12)
-l_total.place(x=450, y=17)
-l_total_ = tk.Label(frameSection, text='Valor total de todos os itens'.upper(), height=2, anchor="center", font=("Ivy 10 bold"), bg=cor3, fg=cor12)
-l_total_.place(x=450, y=17)
+l_qntd = tk.Label(frameSection, text='',width=17, height=4, pady=5, anchor="center", font=("Ivy 17 bold"),bg=cor12)
+l_qntd.place(x=455, y=170)
+l_qtnd_ = tk.Label(frameSection, text=' Quantidade total de itens '.upper(), height=2, anchor="center", font=("Ivy 10 bold"), bg=cor12, fg=cor11)
+l_qtnd_.place(x=455, y=170)
 
-l_qntd = tk.Label(frameSection, text='',width=17, height=4, pady=5, anchor="center", font=("Ivy 17 bold"),bg=cor3)
-l_qntd.place(x=450, y=120)
-l_qtnd_ = tk.Label(frameSection, text=' Quantidade total de itens '.upper(), height=2, anchor="center", font=("Ivy 10 bold"), bg=cor3, fg=cor12)
-l_qtnd_.place(x=450, y=122)
+def mostrar():
+    global tree
+    # creating a treeview with dual scrollbars
+    tabela_head = ['#Item','Nome',  'Sala/Área','Descrição', 'Marca/Modelo', 'Data da compra','Valor da compra', 'Número de série']
+    
+    lista_itens = ver_form()
 
+    tree = ttk.Treeview(frameFotter, selectmode="extended",columns=tabela_head, show="headings")
 
-# creating a treeview with dual scrollbars
-tabela_head = ['#Item','Nome',  'Sala/Área','Descrição', 'Marca/Modelo', 'Data da compra','Valor da compra', 'Número de série']
+    # vertical scrollbar
+    vsb = ttk.Scrollbar(frameFotter, orient="vertical", command=tree.yview)
 
-lista_itens = []
+    # horizontal scrollbar
+    hsb = ttk.Scrollbar(frameFotter, orient="horizontal", command=tree.xview)
 
-global tree
+    tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
+    tree.grid(column=0, row=0, sticky='nsew')
+    vsb.grid(column=1, row=0, sticky='ns')
+    hsb.grid(column=0, row=1, sticky='ew')
+    frameFotter.grid_rowconfigure(0, weight=12)
 
-tree = ttk.Treeview(frameFotter, selectmode="extended",columns=tabela_head, show="headings")
+    hd=["center","center","center","center","center","center","center", 'center']
+    h=[40,150,100,160,130,100,100, 100]
+    n=0
 
-# vertical scrollbar
-vsb = ttk.Scrollbar(frameFotter, orient="vertical", command=tree.yview)
+    for col in tabela_head:
+        tree.heading(col, text=col.title(), anchor='center')
+        # adjust the column's width to the header string
+        tree.column(col, width=h[n],anchor=hd[n])
+        n+=1
 
-# horizontal scrollbar
-hsb = ttk.Scrollbar(frameFotter, orient="horizontal", command=tree.xview)
-
-tree.configure(yscrollcommand=vsb.set, xscrollcommand=hsb.set)
-tree.grid(column=0, row=0, sticky='nsew')
-vsb.grid(column=1, row=0, sticky='ns')
-hsb.grid(column=0, row=1, sticky='ew')
-frameFotter.grid_rowconfigure(0, weight=12)
-
-hd=["center","center","center","center","center","center","center", 'center']
-h=[40,150,100,160,130,100,100, 100]
-n=0
-
-for col in tabela_head:
-    tree.heading(col, text=col.title(), anchor='center')
-    # adjust the column's width to the header string
-    tree.column(col, width=h[n],anchor=hd[n])
-    n+=1
-
-# inserindo os itens dentro da tabela
-for item in lista_itens:
-    tree.insert('', 'end', values=item)
+    # inserindo os itens dentro da tabela
+    for item in lista_itens:
+         tree.insert('', 'end', values=(item[0], item[1], item[2], item[3], item[4], item[5], item[6], item[7]))
 
 
-quantidade = [8888,88]
+    quantidade = [0]
 
-for iten in lista_itens:
-    quantidade.append(iten[6])
+    for iten in lista_itens:
+        if len(iten) >= 7:
+            quantidade.append(iten[6])
 
-Total_valor = sum(quantidade)
-Total_itens = len(quantidade)
+    Total_valor = sum(quantidade)
+    Total_itens = len(quantidade)
 
-l_total['text'] = 'R$ {:,.2f}'.format(Total_valor)
-l_qntd['text'] = Total_itens
+    l_total['text'] = 'R$ {:,.2f}'.format(Total_valor)
+    l_qntd['text'] = Total_itens
+    
+mostrar()
 
 window.mainloop()

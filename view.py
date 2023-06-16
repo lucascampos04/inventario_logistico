@@ -9,44 +9,43 @@ con = lite.connect("dados.db")
 def inserir_form(i):       
     with con:
         cur = con.cursor()
-        query = "INSERT INTO tabela_de_inventario(nome,local,descricao,marca,data_de_compra,valor_da_compra,serie,imagem)VALUES(?, ?, ?, ?, ?, ?, ?, ?)"
+        query = "INSERT INTO inventario_logistico(nome,local,descricao,marca,data_de_compra,valor_da_compra,serie)VALUES(?, ?, ?, ?, ?, ?, ?)"
         cur.execute(query, i)
 
 # atualizando dados
 def atualizar_dados(i):
     with con:
         cur = con.cursor()
-        query = "UPDATE tabela_de_inventario SET nome=?, local=?, descricao=?, marca=?, data_de_compra=?, valor_da_compra=?, serie=?, imagem=? WHERE id=?"
+        query = "UPDATE inventario_logistico SET nome=?, local=?, descricao=?, marca=?, data_de_compra=?, valor_da_compra=?, serie=? WHERE id=?"
         cur.execute(query, i)
-
 
 # deletar dados 
 def deletar_form(i):
     with con:
         cur = con.cursor()
-        query = "DELETE FROM tabela_de_inventario WHERE id=?"
+        query = "DELETE FROM inventario_logistico WHERE id=?"
         cur.execute(query, i)
 
-# ver dados 
 def ver_form():
     ver_dados = []
     with con:
         cur = con.cursor()
-        query = "SELECT * FROM tabela_de_inventario"
+        query = "SELECT * FROM inventario_logistico"
         cur.execute(query)
 
         rows = cur.fetchall()
 
         for row in rows:
-            ver_dados.append(rows)
+            ver_dados.append(row)
     return ver_dados
+
 
 # ver dados individulamente 
 def ver_item(id): 
     ver_dados_individual = []
     with con:
         cur = con.cursor()
-        query = "SELECT * FROM tabela_de_inventario WHERE id=?"
+        query = "SELECT * FROM inventario_logistico WHERE id=?"
         cur.execute(query, id)
 
         rows = cur.fetchall()
