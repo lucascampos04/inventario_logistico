@@ -107,9 +107,6 @@ def atualizar():
         b_confirmar = tk.Button(frameSection, command=update, text="Confirmar".upper(), width=15, overrelief="ridge", font=("Ivy 8"))
         b_confirmar.place(x=330, y=130)
 
-
-
-
     except IndexError:
         messagebox.showerror("Erro", 'Seleciona os dados na tabela')
     
@@ -147,7 +144,6 @@ cor11 = "#F5F5F5"  # Branco escuro
 cor12 = "#000000" # preto
 
 window = tk.Tk()
-window.title('Inventario domestico')
 window.geometry('900x600')
 window.configure(background=cor12)
 window.resizable(width=False, height=False)
